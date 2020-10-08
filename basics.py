@@ -11,13 +11,14 @@ spice.furnsh("/home/parv/Documents/Astro/kernels/naif0012.tls")
 
 #Loading the frame of referance for positioning
 spice.furnsh("/home/parv/Documents/Astro/kernels/de405.bsp")
+spice.furnsh("/home/parv/Documents/Astro/kernels/nep.bsp")
 
 
 nowTime = datetime.datetime.now()
 nowTimeString = str(nowTime)
-print(nowTimeString)
+#print(nowTimeString)
 nowTime_et = spice.str2et(nowTimeString)
-print(nowTime_et)
+#print(nowTime_et)
 
 
 #List all available frame ID'S and print their names
@@ -26,14 +27,12 @@ print(nowTime_et)
 #   print(x, spice.frmnam(x))
 
 referanceFrame = "J2000"
-target = "MARS"
+target = "NEPTUNE"
 observer = "SUN"
 
 #Returns one way light time between the bodies
 [MARSPosition, ltime] = spice.spkpos(target, nowTime_et, referanceFrame, 'NONE', observer)
-print("MARS's position is {}".format(MARSPosition))
-print("Light time between MARS and sun is {}".format(ltime))
-
+    
 def makePlanetPositionPlot(title, size=8, axisLimit=1.5e+08, sunSize=400):
 
     #Make the figure
@@ -79,11 +78,12 @@ for i in range(1,100):
 
 #convert to et
 etTimes = [spice.str2et(str(x)) for x in times]
-print(etTimes)
 
+#The SPK system returns the state of the target relative to the observer. 
+#The computed position data point from the “observer” to the “target.”
+#– The computed velocity is that of the “target” relative to the “observer.”
 marsPositions = spice.spkpos(target, etTimes, referanceFrame, 'NONE', observer)[0]
 print(marsPositions)
-
 axis3D, fig = makePlanetPositionPlot('mars position relative to the Sun over 52 weeks')
 
 #Add the data
